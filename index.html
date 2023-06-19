@@ -26,5 +26,12 @@
         <tbody class="blogs-list"></tbody>
       </table>
     </div>
+
+    <script type="text/template" class="blogs-list-template">
+      <td><span class="task"><%= task %></span></td>
+      <td><span class="description"><%= description %></span></td>
+      <td><span class="status"><%= status %></span></td>
+      <td><button class="btn btn-warning edit-blog">Edit</button> <button class="btn btn-danger delete-blog">Delete</button><button class="btn btn-success update-blog" style="display:none">Update</button> <button class="btn btn-danger cancel" style="display:none">Cancel</button></td>
+    </script>
   </body>
 </html>
