@@ -32,5 +32,18 @@
         </tr>
       </thead>
     </table>
+    <script type="text/javascript">
+      var Task = Backbone.Model.extend({
+        defaults: {
+          description: "",
+          completed: false,
+        },
+      });
+      var task = new Task({
+        description: 'task1',
+        completed: true
+      });
+      console.log(task);
+    </script>
   </body>
 </html>
