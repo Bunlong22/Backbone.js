@@ -1,6 +1,5 @@
 // Model
-
-var Blog = Backbone.Model.extend({
+var Todo = Backbone.Model.extend({
   defaults: {
     task: "",
     title: "",
@@ -8,32 +7,29 @@ var Blog = Backbone.Model.extend({
   },
 });
 
-// Backbone Collection
+// Collection
+var Todos = Backbone.Collection.extend({});
 
-var Blogs = Backbone.Collection.extend({});
+// Instantiate a collection
+var todos = new Todos();
 
-// instantiate a Collection
-
-var blogs = new Blogs();
-
-// Backbone View for one blog
-
-var BlogView = Backbone.View.extend({
-  model: new Blog(),
+// View for one todo item
+var TodoView = Backbone.View.extend({
+  model: new Todo(),
   tagName: "tr",
   initialize: function () {
-    this.template = _.template($(".blogs-list-template").html());
+    this.template = _.template($(".todos-list-template").html());
   },
   events: {
-    "click .edit-blog": "edit",
-    "click .update-blog": "update",
+    "click .edit-todo": "edit",
+    "click .update-todo": "update",
     "click .cancel": "cancel",
-    "click .delete-blog": "delete",
+    "click .delete-todo": "delete",
   },
   edit: function () {
-    $(".edit-blog").hide();
-    $(".delete-blog").hide();
-    this.$(".update-blog").show();
+    $(".edit-todo").hide();
+    $(".delete-todo").hide();
+    this.$(".update-todo").show();
     this.$(".cancel").show();
 
     var task = this.$(".task").html();
@@ -50,19 +46,13 @@ var BlogView = Backbone.View.extend({
         description +
         '">'
     );
-	this.$(".status").html(`
-    <select class="form-control status-update">
-      <option value="To do" ${
-        status === "To do" ? "selected" : ""
-      }>To do</option>
-      <option value="Ongoing" ${
-        status === "Ongoing" ? "selected" : ""
-      }>Ongoing</option>
-      <option value="Completed" ${
-        status === "Completed" ? "selected" : ""
-      }>Completed</option>
-    </select>
-  `);
+    this.$(".status").html(`
+      <select class="form-control status-update">
+        <option value="To do" ${status === "To do" ? "selected" : ""}>To do</option>
+        <option value="Ongoing" ${status === "Ongoing" ? "selected" : ""}>Ongoing</option>
+        <option value="Completed" ${status === "Completed" ? "selected" : ""}>Completed</option>
+      </select>
+    `);
   },
   update: function () {
     this.model.set("task", $(".task-update").val());
@@ -70,7 +60,7 @@ var BlogView = Backbone.View.extend({
     this.model.set("status", $(".status-update").val());
   },
   cancel: function () {
-    blogsView.render();
+    todosView.render();
   },
   delete: function () {
     this.model.destroy();
@@ -81,11 +71,10 @@ var BlogView = Backbone.View.extend({
   },
 });
 
-// Backbone View for all blogs
-
-var BlogsView = Backbone.View.extend({
-  model: blogs,
-  el: $(".blogs-list"),
+// View for all todos
+var TodosView = Backbone.View.extend({
+  model: todos,
+  el: $(".todos-list"),
   initialize: function () {
     var self = this;
     this.model.on("add", this.render, this);
@@ -103,18 +92,18 @@ var BlogsView = Backbone.View.extend({
   render: function () {
     var self = this;
     this.$el.html("");
-    _.each(this.model.toArray(), function (blog) {
-      self.$el.append(new BlogView({ model: blog }).render().$el);
+    _.each(this.model.toArray(), function (todo) {
+      self.$el.append(new TodoView({ model: todo }).render().$el);
     });
     return this;
   },
 });
 
-var blogsView = new BlogsView();
+var todosView = new TodosView();
 
 $(document).ready(function () {
-  $(".add-blog").on("click", function () {
-    var blog = new Blog({
+  $(".add-todo").on("click", function () {
+    var todo = new Todo({
       task: $(".task-input").val(),
       description: $(".description-input").val(),
       status: $(".status-input").val(),
@@ -122,7 +111,7 @@ $(document).ready(function () {
     $(".task-input").val("");
     $(".description-input").val("");
     $(".status-input").val("");
-    console.log(blog.toJSON());
-    blogs.add(blog);
+    console.log(todo.toJSON());
+    todos.add(todo);
   });
 });
