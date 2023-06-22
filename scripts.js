@@ -50,11 +50,19 @@ var BlogView = Backbone.View.extend({
         description +
         '">'
     );
-    this.$(".status").html(
-      '<input type="text" class="form-control status-update" value="' +
-        status +
-        '">'
-    );
+	this.$(".status").html(`
+    <select class="form-control status-update">
+      <option value="To do" ${
+        status === "To do" ? "selected" : ""
+      }>To do</option>
+      <option value="Ongoing" ${
+        status === "Ongoing" ? "selected" : ""
+      }>Ongoing</option>
+      <option value="Completed" ${
+        status === "Completed" ? "selected" : ""
+      }>Completed</option>
+    </select>
+  `);
   },
   update: function () {
     this.model.set("task", $(".task-update").val());
